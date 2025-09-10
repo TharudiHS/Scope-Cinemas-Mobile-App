@@ -31,6 +31,7 @@ class TextStyles {
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColours.crimsonRed,
+    decoration: TextDecoration.underline,
     letterSpacing: 0,
   );
   static const TextStyle size14SofiaProlightGrey = TextStyle(
