@@ -3,15 +3,16 @@ import 'utils/app_theme.dart';
 import 'screens/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ScopeCinemaApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ScopeCinemaApp extends StatelessWidget {
+  const ScopeCinemaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Scope Cinema App',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const SplashScreen(),
