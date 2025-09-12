@@ -1,7 +1,8 @@
-// lib/screens/login_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scope_cinemas/components/main_button.dart';
+import 'package:scope_cinemas/screens/forget_password.dart';
+import 'package:scope_cinemas/screens/new_account_page.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
 import '../utils/app_colours.dart';
 
@@ -112,8 +113,8 @@ class _LoginPageState extends State<LoginPage> {
                           suffixIcon: IconButton(
                             icon: SvgPicture.asset(
                               'assets/images/eye.svg',
-                              height: 20.76,
-                              width: 9.66,
+                              height: 13,
+                              width: 8,
                               color: AppColours.white,
                             ),
                             onPressed: () {},
@@ -137,7 +138,14 @@ class _LoginPageState extends State<LoginPage> {
                 Align(
                   alignment: Alignment.center,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgetPasswordPage(),
+                        ),
+                      );
+                    },
                     child: Text(
                       "Forgot Password?",
                       style: TextStyles.size14SofiaPro,
@@ -210,7 +218,14 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyles.size14SofiaProwhite,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NewAccountPage(),
+                          ),
+                        );
+                      },
                       child: Text(
                         "CREATE NEW",
                         style: TextStyles.size14SofiaPro,
