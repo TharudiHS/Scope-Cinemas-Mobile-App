@@ -7,26 +7,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColours.darkBlue,
+      backgroundColor: AppColours.darkNavy,
       elevation: 0,
       automaticallyImplyLeading: false,
       titleSpacing: 0,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // logo
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Image.asset(
               'assets/images/scope-cinemas-logo.png',
-              height: 28,
+              height: 35,
               fit: BoxFit.contain,
             ),
           ),
 
           // Search icon
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white, size: 28),
-            onPressed: () {},
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: IconButton(
+              icon: const Icon(Icons.search, color: Colors.white, size: 28),
+              onPressed: () {},
+            ),
           ),
         ],
       ),
