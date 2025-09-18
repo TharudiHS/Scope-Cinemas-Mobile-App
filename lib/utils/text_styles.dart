@@ -77,6 +77,13 @@ class TextStyles {
     color: AppColours.white,
     letterSpacing: 0,
   );
+  static const TextStyle size10SofiaProcrimsonRed = TextStyle(
+    fontFamily: 'SofiaPro',
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    color: AppColours.crimsonRed,
+    letterSpacing: 0,
+  );
   static const TextStyle size8SofiaProwhite = TextStyle(
     fontFamily: 'SofiaPro',
     fontSize: 8,
