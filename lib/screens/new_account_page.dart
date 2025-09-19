@@ -29,7 +29,12 @@ class _NewAccountPageState extends State<NewAccountPage> {
             height: 40,
             color: Colors.white,
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          },
         ),
         centerTitle: true,
         title: const Text(
