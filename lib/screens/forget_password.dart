@@ -24,106 +24,126 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
             colors: [AppColours.darkBlue, AppColours.navyBlue],
           ),
         ),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Logo
-                Image.asset('assets/images/scope-cinemas-logo.png', height: 70),
-                const SizedBox(height: 80),
+        child: Column(
+          children: [
+            // Logo at the top
+            Padding(
+              padding: const EdgeInsets.only(top: 80, bottom: 20),
+              child: Image.asset(
+                'assets/images/scope-cinemas-logo.png',
+                height: 70,
+              ),
+            ),
+            const SizedBox(height: 70),
 
-                // Title
-                const Text(
-                  "FORGOT YOUR PASSWORD?",
-                  style: TextStyles.size24SofiaPro,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
+            // Scrollable content below
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Title
+                    const Text(
+                      "FORGOT YOUR PASSWORD?",
+                      style: TextStyles.size24SofiaPro,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
 
-                // Subtitle
-                const Text(
-                  "Enter your email address and we will send you a link to reset your password.",
-                  style: TextStyles.size14SofiaProwhite,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
+                    // Subtitle
+                    const Text(
+                      "Enter your email address and we will send you a link to reset your password.",
+                      style: TextStyles.size14SofiaProwhite,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 30),
 
-                // Email input field
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: AppColours.deepIndigo),
-                  child: TextField(
-                    style: const TextStyle(color: AppColours.white),
-                    decoration: InputDecoration(
-                      label: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Email address",
-                              style: TextStyles.size17SofiaPro.copyWith(
-                                color: AppColours.white,
-                              ),
+                    // Email input field
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(color: AppColours.deepIndigo),
+                      child: TextField(
+                        style: const TextStyle(color: AppColours.white),
+                        decoration: InputDecoration(
+                          label: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Email address",
+                                  style: TextStyles.size17SofiaPro.copyWith(
+                                    color: AppColours.white,
+                                  ),
+                                ),
+                                const TextSpan(
+                                  text: " *",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ],
                             ),
-                            const TextSpan(
-                              text: " *",
-                              style: TextStyle(color: Colors.red),
+                          ),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: SvgPicture.asset(
+                              'assets/images/email.svg',
+                              height: 7,
+                              width: 7,
+                              color: AppColours.white,
                             ),
-                          ],
+                          ),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColours.lightGrey),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColours.white),
+                          ),
                         ),
-                      ),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: SvgPicture.asset(
-                          'assets/images/email.svg',
-                          height: 7,
-                          width: 7,
-                          color: AppColours.white,
-                        ),
-                      ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColours.lightGrey),
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColours.white),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 30),
+                    const SizedBox(height: 30),
 
-                // Send reset link button
-                MainButton(label: "SEND RESET LINK", onPressed: () {}),
-                const SizedBox(height: 20),
+                    // Send reset link button
+                    MainButton(label: "SEND RESET LINK", onPressed: () {}),
 
-                // Back to login
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(),
+                    const SizedBox(height: 20),
+
+                    // Back to login
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/arrow_back.png",
+                            width: 20,
+                            height: 20,
+                            color: AppColours.crimsonRed,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            "Back to Login",
+                            style: TextStyles.size14SofiaPro.copyWith(
+                              color: AppColours.crimsonRed,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColours.crimsonRed,
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_back,
-                        color: AppColours.crimsonRed,
-                        size: 16,
-                      ),
-                      SizedBox(width: 6),
-                      Text("Back to Login", style: TextStyles.size14SofiaPro),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 40),
+                  ],
                 ),
-                const SizedBox(height: 40),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
