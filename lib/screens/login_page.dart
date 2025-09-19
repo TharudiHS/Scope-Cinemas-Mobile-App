@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scope_cinemas/components/main_button.dart';
 import 'package:scope_cinemas/screens/forget_password.dart';
+import 'package:scope_cinemas/screens/home_page.dart';
 import 'package:scope_cinemas/screens/new_account_page.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
 import '../utils/app_colours.dart';
@@ -155,7 +156,15 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 12),
 
                 // Login button
-                MainButton(label: "LOGIN", onPressed: () {}),
+                MainButton(
+                  label: "LOGIN",
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    );
+                  },
+                ),
                 const SizedBox(height: 35),
 
                 // Divider with OR
