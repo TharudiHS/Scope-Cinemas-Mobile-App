@@ -33,6 +33,13 @@ class TextStyles {
     letterSpacing: 0,
     height: 1.25,
   );
+  static const TextStyle size36SofiaProwhite = TextStyle(
+    fontFamily: 'SofiaPro',
+    fontSize: 36,
+    fontWeight: FontWeight.w700,
+    color: AppColours.white,
+    letterSpacing: 0,
+  );
   static const TextStyle size17SofiaPro = TextStyle(
     fontFamily: 'SofiaPro',
     fontSize: 17,
@@ -59,6 +66,13 @@ class TextStyles {
   static const TextStyle size14SofiaProwhite = TextStyle(
     fontFamily: 'SofiaPro',
     fontSize: 14,
+    fontWeight: FontWeight.w300, //light
+    color: AppColours.white,
+    letterSpacing: 0,
+  );
+  static const TextStyle size16SofiaProwhitelight = TextStyle(
+    fontFamily: 'SofiaPro',
+    fontSize: 16,
     fontWeight: FontWeight.w300, //light
     color: AppColours.white,
     letterSpacing: 0,
@@ -98,6 +112,13 @@ class TextStyles {
     color: AppColours.white,
     letterSpacing: 0,
   );
+  static const TextStyle size20SofiaProwhitemedium = TextStyle(
+    fontFamily: 'SofiaPro',
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    color: AppColours.white,
+    letterSpacing: 0,
+  );
   static const TextStyle size20SofiaPro = TextStyle(
     fontFamily: 'SofiaPro',
     fontSize: 20,
@@ -105,7 +126,7 @@ class TextStyles {
     color: AppColours.darkBlue,
     letterSpacing: 0,
   );
-  static const TextStyle size50SofiaProwhite = TextStyle(
+  static const TextStyle size50SofiaPro = TextStyle(
     fontFamily: 'SofiaPro',
     fontSize: 50,
     fontWeight: FontWeight.w700,
@@ -122,7 +143,7 @@ class TextStyles {
   static const TextStyle size16SofiaProroyalIndigo = TextStyle(
     fontFamily: 'SofiaPro',
     fontSize: 16,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w300,
     color: AppColours.royalIndigo,
     letterSpacing: 0,
   );
