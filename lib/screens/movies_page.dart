@@ -1,156 +1,182 @@
 import 'package:flutter/material.dart';
-import '../components/app_bar.dart';
-import '../utils/app_colours.dart';
-import '../utils/text_styles.dart';
+import 'package:scope_cinemas/components/app_bar.dart';
+import 'package:scope_cinemas/components/bottom_bar.dart';
+import 'package:scope_cinemas/screens/filter_page.dart';
+import 'package:scope_cinemas/screens/movie_details_page.dart';
+import 'package:scope_cinemas/utils/app_colours.dart';
+import 'package:scope_cinemas/utils/text_styles.dart';
+import 'package:scope_cinemas/data/models/movie_model.dart';
 
 class MoviesPage extends StatelessWidget {
   const MoviesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // movie data
-    final List<Map<String, String>> movies = [
-      {
-        "title": "AKASA KUSUM (Sinhala Rerelease)",
-        "status": "In Theaters Now",
-        "image": "assets/images/movies/akasa_kusum.jpg",
-      },
-      {
-        "title": "LILO & STITCH",
-        "status": "In Theaters Now",
-        "image": "assets/images/movies/lilo_stitch.jpg",
-      },
-      {
-        "title": "FINAL DESTINATION: BLOODLINES",
-        "status": "In Theaters Now",
-        "image": "assets/images/movies/final_destination.jpg",
-      },
-      {
-        "title": "THE BHOOTNII (Hindi)",
-        "status": "In Theaters Now",
-        "image": "assets/images/movies/bhootnii.jpg",
-      },
-      {
-        "title": "RANI (SINHALA)",
-        "status": "In Theaters Now",
-        "image": "assets/images/movies/rani.jpg",
-      },
-      {
-        "title": "MINECRAFT",
-        "status": "In Theaters Now",
-        "image": "assets/images/movies/minecraft.jpg",
-      },
-      {
-        "title": "EARLY ACCESS: MISSION IMPOSSIBLE: THE FINAL RECKONING",
-        "status": "In Theaters Now",
-        "image": "assets/images/movies/mission_impossible.jpg",
-      },
-      {
-        "title": "GANGERS (TAMIL)",
-        "status": "In Theaters Now",
-        "image": "assets/images/movies/gangers.avif",
-      },
-    ];
+    // Selected movies
+    final selectedMovies = movies
+        .where(
+          (m) => [
+            "AKASA KUSUM",
+            "LILO & STITCH",
+            "FINAL DESTINATION",
+            "BHOOTNII",
+            "RANI (SINHALA)",
+            "MINECRAFT",
+            "MISSION IMPOSSIBLE",
+            "GANGERS (TAMIL)",
+          ].contains(m.title),
+        )
+        .toList();
 
     return Scaffold(
       backgroundColor: AppColours.darkBlue,
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: CustomAppBar(),
-      ),
+      appBar: const CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// Title Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
                     Text("NOW SHOWING", style: TextStyles.size24SofiaPro),
-                    const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                    const SizedBox(width: 6),
+                    Image.asset(
+                      "assets/images/arrow-54.png",
+                      height: 20,
+                      width: 20,
+                      color: Colors.white,
+                    ),
                   ],
                 ),
-                const Icon(Icons.tune, color: Colors.white),
+                IconButton(
+                  icon: const Icon(Icons.tune, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FilterPage(),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
             const SizedBox(height: 20),
+            Container(
+              height: 1,
+              color: AppColours.royalIndigo.withOpacity(0.7),
+            ),
+            const SizedBox(height: 25),
 
             /// Movies Grid
             Expanded(
               child: GridView.builder(
-                itemCount: movies.length,
+                itemCount: selectedMovies.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 16,
-                  childAspectRatio: 0.65,
+                  childAspectRatio: 0.55,
                 ),
                 itemBuilder: (context, index) {
-                  final movie = movies[index];
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                  final movie = selectedMovies[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const MovieDetailsPage(),
+                        ),
+                      );
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /// Poster
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(12),
-                          ),
-                          child: Image.asset(
-                            movie["image"]!,
-                            height: 150,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-
-                        /// Title
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            movie["title"]!,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyles.size14SofiaProwhite,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-
-                        /// Status
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            movie["status"]!,
-                            style: TextStyles.size8SofiaProwhite,
-                          ),
-                        ),
-                        const Spacer(),
-
-                        /// Buy Tickets
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColours.darkBlue,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
+                        /// Poster with gradient overlay
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              /// Poster
+                              ClipRRect(
+                                child: Image.asset(
+                                  movie.imageUrl,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              onPressed: () {},
-                              child: const Text("BUY TICKETS"),
+
+                              /// Gradient overlay box with Title + Subtitle
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.black.withOpacity(0.7),
+                                        Colors.transparent,
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        movie.title,
+                                        style: TextStyles.size20SofiaProwhite,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        movie.subtitle,
+                                        style: TextStyles.size10SofiaPro,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        /// Buy Tickets button
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const MovieDetailsPage(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: AppColours.darkBlue,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                            ),
+                            child: const Text(
+                              "BUY TICKETS",
+                              style: TextStyles.size16SofiaPro,
                             ),
                           ),
                         ),
@@ -163,6 +189,7 @@ class MoviesPage extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 1),
     );
   }
 }
