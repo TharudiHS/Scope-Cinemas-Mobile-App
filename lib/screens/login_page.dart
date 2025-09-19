@@ -149,7 +149,10 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: Text(
                       "Forgot Password?",
-                      style: TextStyles.size14SofiaPro,
+                      style: TextStyles.size14SofiaPro.copyWith(
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColours.crimsonRed,
+                      ),
                     ),
                   ),
                 ),
@@ -237,7 +240,10 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       child: Text(
                         "CREATE NEW",
-                        style: TextStyles.size14SofiaPro,
+                        style: TextStyles.size14SofiaPro.copyWith(
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColours.crimsonRed,
+                        ),
                       ),
                     ),
                   ],
