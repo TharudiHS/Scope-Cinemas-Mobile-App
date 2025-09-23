@@ -9,6 +9,7 @@ class AppColours {
   static const transparentBlack = Color(0x29000000);
   static const lightGrey = Color(0xFFC8C8C8);
   static const crimsonRed = Color(0xFFD93232);
+  static const deepCrimson = Color(0xFFD61C3D);
   static const goldenYellow = Color(0xFFEEC643);
   static const midnightBlue = Color(0xFF000023);
   static const royalIndigo = Color(0xFF2F3090);
