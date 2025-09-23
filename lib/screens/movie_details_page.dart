@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:scope_cinemas/components/app_bar.dart';
 import 'package:scope_cinemas/components/bottom_bar.dart';
 import 'package:scope_cinemas/components/main_button.dart';
+import 'package:scope_cinemas/screens/movies_page.dart';
+import 'package:scope_cinemas/screens/showtimes_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
 
@@ -19,13 +21,25 @@ class MovieDetailsPage extends StatelessWidget {
           Container(
             width: double.infinity,
             color: AppColours.deepIndigo,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
             child: Row(
               children: [
                 // Back Button
                 IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => Navigator.pop(context),
+                  icon: Image.asset(
+                    "assets/images/arrow_back.png",
+                    width: 30,
+                    height: 30,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MoviesPage(),
+                      ),
+                    );
+                  },
                 ),
 
                 const Spacer(),
@@ -35,7 +49,7 @@ class MovieDetailsPage extends StatelessWidget {
 
                 const Spacer(),
 
-                const SizedBox(width: 48),
+                const SizedBox(width: 50),
               ],
             ),
           ),
@@ -141,7 +155,17 @@ class MovieDetailsPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: MainButton(label: "BUY TICKETS", onPressed: () {}),
+            child: MainButton(
+              label: "BUY TICKETS",
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ShowtimesPage(),
+                  ),
+                );
+              },
+            ),
           ),
           const BottomNavBar(selectedIndex: 1),
         ],
