@@ -56,6 +56,13 @@ class TextStyles {
     decoration: TextDecoration.underline,
     letterSpacing: 0,
   );
+  static const TextStyle size16SofiaProcrimsonred = TextStyle(
+    fontFamily: 'SofiaPro',
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: AppColours.crimsonRed,
+    letterSpacing: 0,
+  );
   static const TextStyle size14SofiaProlightGrey = TextStyle(
     fontFamily: 'SofiaPro',
     fontSize: 14,
