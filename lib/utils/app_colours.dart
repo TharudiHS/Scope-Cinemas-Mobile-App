@@ -13,12 +13,14 @@ class AppColours {
   static const goldenYellow = Color(0xFFEEC643);
   static const midnightBlue = Color(0xFF000023);
   static const royalIndigo = Color(0xFF2F3090);
-  static const Color black30 = Color(0x4D000000);
-  static const Color black16 = Color(0x29000000);
-  static const Color black35 = Color(0x59000000);
-  static const Color softLavender = Color(0xFFDBDBFF);
-  static const Color darkNavy = Color(0xFF01012A);
-  static const Color black80 = Color(0xCC000000);
-  static const Color paleLilac = Color(0xFFD5D5E9);
-  static const Color deepBlue = Color(0xFF000041);
+  static const black30 = Color(0x4D000000);
+  static const black16 = Color(0x29000000);
+  static const black35 = Color(0x59000000);
+  static const softLavender = Color(0xFFDBDBFF);
+  static const darkNavy = Color(0xFF01012A);
+  static const black80 = Color(0xCC000000);
+  static const paleLilac = Color(0xFFD5D5E9);
+  static const deepBlue = Color(0xFF000041);
+  static const grey = Color(0xFF4D4D4D);
+  static const darkGrey = Color(0xFF2D2D2D);
 }
