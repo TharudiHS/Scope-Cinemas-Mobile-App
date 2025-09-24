@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:scope_cinemas/components/app_bar.dart';
 import 'package:scope_cinemas/components/bottom_bar.dart';
+import 'package:scope_cinemas/screens/filter_page.dart';
 import 'package:scope_cinemas/screens/movie_details_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
@@ -40,48 +42,50 @@ class ShowtimesPage extends StatelessWidget {
     final cinemas = [
       Cinema("SCOPE CINEMAS MULTIPLEX - \nHAVELOCK CITY MALL", [
         CinemaFormat("IMAX", [
-          ["10:30 AM", true],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
+          ["10:30 AM", true, "3d"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "2d"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
         ]),
         CinemaFormat("Dolby Atmos", [
-          ["10:30 AM", true],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
+          ["10:30 AM", true, "3d"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
         ]),
       ]),
       Cinema("SCOPE CINEMAS MULTIPLEX - \nCOLOMBO CITY CENTRE", [
         CinemaFormat("Dolby Atmos", [
-          ["10:30 AM", true],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
+          ["10:30 AM", true, "3d"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
         ]),
       ]),
       Cinema("LIBERTY BY SCOPE CINEMAS - \nCOLPETTY", [
         CinemaFormat("Dolby Atmos", [
-          ["10:30 AM", true],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
+          ["10:30 AM", true, "3d"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
         ]),
       ]),
       Cinema("LIBERTY BY SCOPE CINEMAS - \nKIRIBATHGODA", [
         CinemaFormat("Dolby Atmos", [
-          ["10:30 AM", true],
-          ["10:30 AM", false],
-          ["10:30 AM", false],
+          ["10:30 AM", true, "3d"],
+          ["10:30 AM", false, "3d_1"],
+          ["10:30 AM", false, "3d_1"],
         ]),
       ]),
     ];
@@ -100,7 +104,6 @@ class ShowtimesPage extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  // Loop through cinemas and add dividers between them
                   for (var i = 0; i < cinemas.length; i++) ...[
                     _buildCinemaSection(cinemas[i]),
                     if (i != cinemas.length - 1)
@@ -170,7 +173,12 @@ class ShowtimesPage extends StatelessWidget {
           const Spacer(),
           IconButton(
             icon: const Icon(Icons.tune, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const FilterPage()),
+              );
+            },
             splashRadius: 22,
             tooltip: 'Filter',
           ),
@@ -268,62 +276,73 @@ class ShowtimesPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       child: Column(
         children: [
+          // Cinema Name
           Text(
             cinema.cinemaName,
             style: TextStyles.size20SofiaProwhite,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
+
+          // Loop through formats (IMAX / Dolby)
           for (var format in cinema.formats)
             Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: 20),
               child: Container(
+                width: 350,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(color: AppColours.deepIndigo),
                 child: Column(
                   children: [
+                    // Format Logo (IMAX or Dolby)
                     Image.asset(
                       format.formatName == "IMAX"
                           ? "assets/images/imax.png"
                           : "assets/images/dolby.png",
-                      height: 32,
+                      height: 28,
                     ),
                     const SizedBox(height: 12),
+
+                    // Showtimes Grid
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      alignment: WrapAlignment.center,
+
                       children: format.times.map((timeData) {
                         final time = timeData[0] as String;
                         final isDisabled = timeData[1] as bool;
+                        final formatType = timeData.length > 2
+                            ? timeData[2] as String
+                            : "3d";
                         return Container(
                           width: 120,
-                          height: 50,
+                          height: 40,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: isDisabled ? Colors.grey[700] : Colors.white,
-                            borderRadius: BorderRadius.circular(6),
+                            color: isDisabled
+                                ? AppColours.grey
+                                : AppColours.white,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              // Showtime Text
                               Text(
                                 time,
                                 style: TextStyle(
                                   color: isDisabled
-                                      ? Colors.black54
-                                      : AppColours.darkBlue,
+                                      ? AppColours.darkGrey
+                                      : AppColours.deepIndigo,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: 15,
+                                  fontFamily: 'SofiaPro',
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                "3D",
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                ),
+
+                              // SVG Icon (2D / 3D / 3D_1)
+                              SvgPicture.asset(
+                                "assets/images/$formatType.svg",
+                                height: 7.1,
                               ),
                             ],
                           ),
