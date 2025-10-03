@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:scope_cinemas/components/app_bar.dart';
 import 'package:scope_cinemas/components/bottom_bar.dart';
+import 'package:scope_cinemas/screens/loyalty_points_page.dart';
+import 'package:scope_cinemas/screens/offers_competitions_page.dart';
+import 'package:scope_cinemas/screens/settings_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
+import 'package:scope_cinemas/screens/reservations_page.dart';
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
@@ -19,16 +23,16 @@ class MenuPage extends StatelessWidget {
           const SizedBox(height: 10),
           Container(height: 1, color: AppColours.royalIndigo.withOpacity(0.7)),
           const SizedBox(height: 25),
-          _menuTile("Offers & Competitions"),
-          _menuTile("My Reservations"),
-          _menuTile("My Loyalty Points"),
-          _menuTile("About Us", isExternal: true),
-          _menuTile("Experiences", isExternal: true),
-          _menuTile("Scope Privilege", isExternal: true),
-          _menuTile("Gift Cards", isExternal: true),
-          _menuTile("Contact Us", isExternal: true),
-          _menuTile("Settings"),
-          _menuTile("Log Out"),
+          _menuTile(context, "Offers & Competitions"),
+          _menuTile(context, "My Reservations"),
+          _menuTile(context, "My Loyalty Points"),
+          _menuTile(context, "About Us", isExternal: true),
+          _menuTile(context, "Experiences", isExternal: true),
+          _menuTile(context, "Scope Privilege", isExternal: true),
+          _menuTile(context, "Gift Cards", isExternal: true),
+          _menuTile(context, "Contact Us", isExternal: true),
+          _menuTile(context, "Settings"),
+          _menuTile(context, "Log Out"),
           const SizedBox(height: 30),
 
           const SizedBox(height: 10),
@@ -72,7 +76,11 @@ class MenuPage extends StatelessWidget {
   }
 
   // menu tile widget
-  Widget _menuTile(String title, {bool isExternal = false}) {
+  Widget _menuTile(
+    BuildContext context,
+    String title, {
+    bool isExternal = false,
+  }) {
     return Column(
       children: [
         ListTile(
@@ -86,7 +94,35 @@ class MenuPage extends StatelessWidget {
                   color: AppColours.goldenYellow,
                 )
               : null,
-          onTap: () {},
+          onTap: () {
+            if (title == "My Reservations") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ReservationsPage(),
+                ),
+              );
+            } else if (title == "My Loyalty Points") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoyaltyPointsPage(),
+                ),
+              );
+            } else if (title == "Settings") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              );
+            } else if (title == "Experiences") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OffersCompetitionsPage(),
+                ),
+              );
+            }
+          },
         ),
         const Divider(color: AppColours.deepIndigo, thickness: 0.5),
       ],
