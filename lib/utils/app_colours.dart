@@ -23,4 +23,8 @@ class AppColours {
   static const deepBlue = Color(0xFF000041);
   static const grey = Color(0xFF4D4D4D);
   static const darkGrey = Color(0xFF2D2D2D);
+  static const brightGreen = Color(0xFF0BA100);
+  static const gold = Color(0xFFD4B000);
+  static const mediumSlateBlue = Color(0xFF8080CD);
+  static const graniteGray = Color(0xFF707070);
 }
