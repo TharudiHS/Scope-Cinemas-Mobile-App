@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:scope_cinemas/components/app_bar.dart';
 import 'package:scope_cinemas/components/bottom_bar.dart';
+import 'package:scope_cinemas/screens/booking_history_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
 
@@ -22,8 +23,10 @@ class ReservationsPage extends StatelessWidget {
           const SizedBox(height: 25),
           const Text("Booking History", style: TextStyles.size14SofiaProwhite),
           const SizedBox(height: 20),
+
           // Reservation Card 1
           _reservationCard(
+            context,
             cinema: "Scope Cinemas - Havelock City Mall",
             status: "Booked",
             movie: "Superman",
@@ -32,8 +35,10 @@ class ReservationsPage extends StatelessWidget {
             price: "LKR 925.00",
           ),
           const SizedBox(height: 16),
+
           // Reservation Card 2
           _reservationCard(
+            context,
             cinema: "Scope Cinemas Multiplex - Colombo City \nCentre",
             status: "Booked",
             movie: "AKASA KUSUM ආකාස කුසුම්- \n(SINHALA RERELEASE)",
@@ -49,7 +54,8 @@ class ReservationsPage extends StatelessWidget {
   }
 
   // Reservation Card Widget
-  Widget _reservationCard({
+  Widget _reservationCard(
+    BuildContext context, {
     required String cinema,
     required String status,
     required String movie,
@@ -100,7 +106,17 @@ class ReservationsPage extends StatelessWidget {
               ),
               Text(price, style: TextStyles.size16SofiaProgold),
               const SizedBox(width: 16),
-              Text("VIEW E-TICKET", style: TextStyles.size14SofiaPro),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BookingHistoryPage(),
+                    ),
+                  );
+                },
+                child: Text("VIEW E-TICKET", style: TextStyles.size14SofiaPro),
+              ),
             ],
           ),
         ],
