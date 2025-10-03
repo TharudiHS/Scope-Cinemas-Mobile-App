@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scope_cinemas/screens/cinemas_page.dart';
+import 'package:scope_cinemas/screens/menu_page.dart';
 import 'package:scope_cinemas/screens/movies_page.dart';
 import 'package:scope_cinemas/screens/home_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
@@ -18,7 +20,7 @@ class BottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _svgNavItem("assets/images/home.svg", "Home", selectedIndex == 0, () {
-            if (selectedIndex != 1) {
+            if (selectedIndex != 0) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => const HomePage()),
@@ -42,7 +44,14 @@ class BottomNavBar extends StatelessWidget {
             "assets/images/cinemas.svg",
             "Cinemas",
             selectedIndex == 2,
-            () {},
+            () {
+              if (selectedIndex != 2) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CinemasPage()),
+                );
+              }
+            },
           ),
           _svgNavItem(
             "assets/images/snacks.svg",
@@ -50,12 +59,14 @@ class BottomNavBar extends StatelessWidget {
             selectedIndex == 3,
             () {},
           ),
-          _svgNavItem(
-            "assets/images/menu.svg",
-            "Menu",
-            selectedIndex == 4,
-            () {},
-          ),
+          _svgNavItem("assets/images/menu.svg", "Menu", selectedIndex == 4, () {
+            if (selectedIndex != 4) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const MenuPage()),
+              );
+            }
+          }),
         ],
       ),
     );
