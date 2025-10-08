@@ -4,6 +4,7 @@ import 'package:scope_cinemas/screens/cinemas_page.dart';
 import 'package:scope_cinemas/screens/menu_page.dart';
 import 'package:scope_cinemas/screens/movies_page.dart';
 import 'package:scope_cinemas/screens/home_page.dart';
+import 'package:scope_cinemas/screens/snacks_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -57,7 +58,14 @@ class BottomNavBar extends StatelessWidget {
             "assets/images/snacks.svg",
             "Snacks",
             selectedIndex == 3,
-            () {},
+            () {
+              if (selectedIndex != 3) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SnackPage()),
+                );
+              }
+            },
           ),
           _svgNavItem("assets/images/menu.svg", "Menu", selectedIndex == 4, () {
             if (selectedIndex != 4) {
