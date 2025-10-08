@@ -114,7 +114,7 @@ class MenuPage extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => const SettingsPage()),
               );
-            } else if (title == "Experiences") {
+            } else if (title == "Offers & Competitions") {
               Navigator.push(
                 context,
                 MaterialPageRoute(
