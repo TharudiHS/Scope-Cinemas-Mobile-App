@@ -1,8 +1,11 @@
-// lib/screens/seatplan_page.dart
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scope_cinemas/components/bottom_bar.dart';
 import 'package:scope_cinemas/components/app_bar.dart';
+import 'package:scope_cinemas/components/button.dart';
+import 'package:scope_cinemas/data/models/seat_layout_model.dart';
+import 'package:scope_cinemas/screens/terms_conditions_popup.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
 
@@ -17,135 +20,19 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
   int selectedTimeIndex = 0;
   List<String> timeSlots = ['10:30 AM', '02:30 PM', '06:30 PM'];
 
-  /// DIRECTOR’S LOUNGE layout (3 blocks)
-  final directorLoungeSeats = [
-    // Left block
-    [
-      ["available", "available", "available"],
-      ["available", "available", "available"],
-      ["available", "available", "available", "available"],
-      ["available", "available", "available", "available"],
-    ],
+  late List<List<List<String>>> directorLoungeSeats;
+  late List<List<List<String>>> standardSeats;
 
-    // Middle block
-    [
-      [
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-      ],
-      [
-        "available",
-        "occupied",
-        "occupied",
-        "occupied",
-        "available",
-        "available",
-      ],
-      [
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-      ],
-      [
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-      ],
-    ],
+  bool showTicketPopup = false;
+  int adultCount = 1;
+  int childCount = 1;
 
-    // Right block
-    [
-      ["available", "available", "available"],
-      ["available", "available", "available"],
-      ["available", "available", "available", "available"],
-      ["available", "available", "available", "available"],
-    ],
-  ];
-
-  /// STANDARD layout (3 blocks)
-  final standardSeats = [
-    // Left block
-    [
-      ["available", "available", "available", "available"],
-      ["available", "available", "available", "available"],
-      ["available", "available", "available", "available"],
-      ["available", "available", "available", "available"],
-      ["available", "available", "available", "available"],
-    ],
-
-    // Middle block
-    [
-      [
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-      ],
-      [
-        "available",
-        "occupied",
-        "occupied",
-        "occupied",
-        "occupied",
-        "occupied",
-        "occupied",
-        "available",
-      ],
-      [
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-      ],
-      [
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-      ],
-      [
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-        "available",
-      ],
-    ],
-
-    // Right block
-    [
-      ["available", "available", "available", "available"],
-      ["available", "available", "available", "available"],
-      ["available", "unavailable", "unavailable", "available"],
-      ["available", "available", "available", "available"],
-      ["available", "available", "available", "available"],
-    ],
-  ];
+  @override
+  void initState() {
+    super.initState();
+    directorLoungeSeats = SeatLayoutModel.getDirectorLoungeSeats();
+    standardSeats = SeatLayoutModel.getStandardSeats();
+  }
 
   void toggleSeat(List<List<String>> block, int row, int col) {
     setState(() {
@@ -154,10 +41,19 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
       } else if (block[row][col] == 'selected') {
         block[row][col] = 'available';
       }
+
+      // Check if any seat is selected to show popup
+      bool anySelected =
+          directorLoungeSeats
+              .expand((b) => b)
+              .expand((r) => r)
+              .contains('selected') ||
+          standardSeats.expand((b) => b).expand((r) => r).contains('selected');
+
+      showTicketPopup = anySelected;
     });
   }
 
-  // TIME SLOTS
   Widget buildTimeSlots() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -173,8 +69,6 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
             decoration: BoxDecoration(
               color: selected ? AppColours.crimsonRed : Colors.transparent,
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               time,
@@ -189,18 +83,16 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
     );
   }
 
-  // SCREEN HEADER
   Widget buildScreenHeader() {
     return Stack(
       alignment: Alignment.center,
       children: [
         Container(
-          height: 60,
+          height: 40,
           width: double.infinity,
           margin: const EdgeInsets.symmetric(vertical: 10),
           child: CustomPaint(painter: ScreenArcPainter()),
         ),
-
         const Text(
           "SCREEN",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -210,9 +102,9 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
           child: GestureDetector(
             onTap: () {},
             child: SvgPicture.asset(
-              "assets/images/zoom-in.svg",
-              width: 20,
-              height: 20,
+              "assets/images/zoom_in.svg",
+              width: 22,
+              height: 22,
             ),
           ),
         ),
@@ -220,118 +112,171 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
     );
   }
 
-  // SEAT BLOCK BUILDER
-  Widget buildSeatBlock(List<List<String>> block) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: block.asMap().entries.map((entry) {
-        int rowIndex = entry.key;
-        List<String> row = entry.value;
+  Widget buildSeatBlockGrid(
+    List<List<String>> blockRows,
+    int blockIndex,
+    String sectionType,
+  ) {
+    const double seatWidth = 16.37;
+    const double seatHorizontalMargin = 3;
+    final double seatTotalWidth = seatWidth + (seatHorizontalMargin * 2);
 
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: row.asMap().entries.map((seatEntry) {
-            int colIndex = seatEntry.key;
-            String status = seatEntry.value;
+    final int maxCols = blockRows
+        .map((r) => r.length)
+        .fold(0, (prev, cur) => max(prev, cur));
+    final double blockWidth = maxCols * seatTotalWidth;
 
-            Color bgColor;
-            Color borderColor = Colors.white;
-            switch (status) {
-              case 'occupied':
-                bgColor = Colors.red;
-                break;
-              case 'selected':
-                bgColor = Colors.green;
-                break;
-              case 'unavailable':
-                bgColor = Colors.grey;
-                break;
-              default:
-                bgColor = Colors.transparent;
-                borderColor = Colors.white;
+    return SizedBox(
+      width: blockWidth,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(blockRows.length, (rowIndex) {
+          final row = blockRows[rowIndex];
+
+          MainAxisAlignment rowAlignment = MainAxisAlignment.center;
+          final bool isDirector = sectionType == 'director';
+          final bool isStandard = sectionType == 'standard';
+          final int lastRowIndex = blockRows.length - 1;
+
+          if (blockIndex == 0) {
+            if (isDirector && rowIndex <= 2) {
+              rowAlignment = MainAxisAlignment.end;
+            } else if (isStandard &&
+                (rowIndex <= 2 || rowIndex == lastRowIndex)) {
+              rowAlignment = MainAxisAlignment.end;
             }
+          } else if (blockIndex == 2) {
+            if (isDirector && rowIndex <= 2) {
+              rowAlignment = MainAxisAlignment.start;
+            } else if (isStandard &&
+                (rowIndex <= 2 || rowIndex == lastRowIndex)) {
+              rowAlignment = MainAxisAlignment.start;
+            }
+          }
 
-            return GestureDetector(
-              onTap: status == 'occupied' || status == 'unavailable'
-                  ? null
-                  : () => toggleSeat(block, rowIndex, colIndex),
-              child: Container(
-                margin: const EdgeInsets.all(3),
-                width: 22,
-                height: 22,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  border: Border.all(color: borderColor, width: 1),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Text(
-                  'L1',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 9,
-                    fontWeight: FontWeight.bold,
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: rowAlignment,
+              children: List.generate(row.length, (seatIndex) {
+                final status = row[seatIndex];
+
+                Color bgColor;
+                Color borderColor = Colors.white;
+
+                switch (status) {
+                  case 'occupied':
+                    bgColor = AppColours.crimsonRed;
+                    break;
+                  case 'selected':
+                    bgColor = AppColours.brightGreen;
+                    break;
+                  case 'unavailable':
+                    bgColor = AppColours.graniteGray;
+                    break;
+                  default:
+                    bgColor = Colors.transparent;
+                }
+
+                return GestureDetector(
+                  onTap: status == 'occupied' || status == 'unavailable'
+                      ? null
+                      : () => toggleSeat(blockRows, rowIndex, seatIndex),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    width: seatWidth,
+                    height: 16.37,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      border: Border.all(color: borderColor, width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'L1',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          }).toList(),
-        );
-      }).toList(),
+                );
+              }),
+            ),
+          );
+        }),
+      ),
     );
   }
 
-  // SEAT SECTION BUILDER (arrange blocks in row)
-  Widget buildSeatSection(List<List<List<String>>> seatBlocks) {
+  Widget buildSeatSection(
+    List<List<List<String>>> seatBlocks, {
+    required String sectionType,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: seatBlocks.asMap().entries.map((entry) {
-        int blockIndex = entry.key;
-        List<List<String>> block = entry.value;
+        int index = entry.key;
+        double spacing = index == 1 ? 12 : 5;
 
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: blockIndex == 1 ? 30 : 10),
-          child: buildSeatBlock(block),
+          padding: EdgeInsets.symmetric(horizontal: spacing),
+          child: buildSeatBlockGrid(entry.value, index, sectionType),
         );
       }).toList(),
     );
   }
 
-  // LEGEND
   Widget buildSeatLegend() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        legendItem(Colors.green, 'Selected'),
-        const SizedBox(width: 12),
-        legendItem(Colors.transparent, 'Available', border: true),
-        const SizedBox(width: 12),
-        legendItem(Colors.red, 'Occupied'),
-        const SizedBox(width: 12),
-        legendItem(Colors.grey, 'Unavailable'),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              legendItem(AppColours.brightGreen, 'Selected'),
+              const SizedBox(width: 75),
+              legendItem(Colors.transparent, 'Available', border: true),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              legendItem(AppColours.crimsonRed, 'Occupied'),
+              const SizedBox(width: 75),
+              legendItem(AppColours.graniteGray, 'Unavailable'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget legendItem(Color color, String label, {bool border = false}) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 20,
-          height: 20,
+          width: 16,
+          height: 16,
           decoration: BoxDecoration(
             color: color,
-            border: border ? Border.all(color: Colors.white) : null,
+            borderRadius: BorderRadius.circular(4),
+            border: border ? Border.all(color: Colors.white, width: 1) : null,
           ),
         ),
-        const SizedBox(width: 4),
-        Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
+        const SizedBox(width: 5),
+        Text(label, style: const TextStyle(color: Colors.white, fontSize: 13)),
       ],
     );
   }
 
-  // MOVIE HEADER
   Widget _buildMovieHeader(BuildContext context) {
     return Container(
       color: AppColours.deepIndigo,
@@ -348,17 +293,13 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
                   height: 30,
                   color: Colors.white,
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
               ),
-              const SizedBox(width: 8),
               ClipRRect(
-                borderRadius: BorderRadius.circular(4),
                 child: Image.asset(
-                  "assets/images/superman.png",
+                  "assets/images/superman1.jpeg",
                   height: 40,
-                  width: 28,
+                  width: 30,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -371,72 +312,333 @@ class _SeatPlanPageState extends State<SeatPlanPage> {
     );
   }
 
+  Widget ticketTypeColumn(
+    String title,
+    String price,
+    int count,
+    Function(int) onChanged,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          price,
+          style: const TextStyle(
+            fontSize: 13,
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                if (count > 0) onChanged(count - 1);
+              },
+              child: const Icon(
+                Icons.remove_circle_outline,
+                color: Colors.black,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '$count',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 12),
+            GestureDetector(
+              onTap: () => onChanged(count + 1),
+              child: const Icon(
+                Icons.add_circle_outline,
+                color: Colors.black,
+                size: 24,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColours.darkBlue,
       appBar: const CustomAppBar(),
       bottomNavigationBar: const BottomNavBar(selectedIndex: 1),
-      body: Column(
+      body: Stack(
         children: [
-          _buildMovieHeader(context),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  buildTimeSlots(),
-                  const SizedBox(height: 20),
-                  buildScreenHeader(),
-                  const SizedBox(height: 10),
-
-                  // Director’s Lounge
-                  Text(
-                    "Director's Lounge | LKR 800.00",
-                    style: TextStyles.size14SofiaProwhite,
+          Column(
+            children: [
+              _buildMovieHeader(context),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      buildTimeSlots(),
+                      const SizedBox(height: 20),
+                      Container(
+                        height: 1,
+                        color: AppColours.royalIndigo.withOpacity(0.7),
+                      ),
+                      const SizedBox(height: 20),
+                      buildScreenHeader(),
+                      const SizedBox(height: 20),
+                      Text(
+                        "Director's Lounge | LKR 800.00",
+                        style: TextStyles.size14SofiaProwhite,
+                      ),
+                      const SizedBox(height: 25),
+                      buildSeatSection(
+                        directorLoungeSeats,
+                        sectionType: 'director',
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        "Standard | LKR 1000.00",
+                        style: TextStyles.size14SofiaProwhite,
+                      ),
+                      const SizedBox(height: 25),
+                      buildSeatSection(standardSeats, sectionType: 'standard'),
+                      const SizedBox(height: 30),
+                      buildSeatLegend(),
+                      const SizedBox(height: 40),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  buildSeatSection(directorLoungeSeats),
-                  const SizedBox(height: 30),
+                ),
+              ),
+            ],
+          ),
 
-                  // Standard
-                  Text(
-                    "Standard | LKR 1000.00",
-                    style: TextStyles.size14SofiaProwhite,
-                  ),
-                  const SizedBox(height: 10),
-                  buildSeatSection(standardSeats),
-                  const SizedBox(height: 30),
+          // Popup Message
+          if (showTicketPopup)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: 20,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Gold line
+                    Center(
+                      child: Container(
+                        height: 3,
+                        width: 148,
+                        decoration: BoxDecoration(
+                          color: AppColours.goldenYellow,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                        margin: const EdgeInsets.only(bottom: 16),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
 
-                  buildSeatLegend(),
-                  const SizedBox(height: 40),
-                ],
+                    // Title and Edit Tickets
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "TICKETS TYPE",
+                          style: TextStyles.size20SofiaPro,
+                        ),
+                        GestureDetector(
+                          onTap: () => setState(() => showTicketPopup = false),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.open_in_new,
+                                size: 16,
+                                color: AppColours.goldenYellow,
+                              ),
+                              const SizedBox(width: 6),
+                              const Text(
+                                "Edit Tickets",
+                                style: TextStyles.size16SofiaProgoldenYellow,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+                    const Divider(height: 1, color: AppColours.royalIndigo),
+                    const SizedBox(height: 12),
+
+                    // Adult and Child Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Adult Column
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "ADULT",
+                                style: TextStyles.size20SofiaPro,
+                              ),
+                              const SizedBox(height: 16),
+                              const Text(
+                                "LKR 2,375.00",
+                                style: TextStyles.size14SofiaProdarkBlue,
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (adultCount > 0) {
+                                        setState(() => adultCount--);
+                                      }
+                                    },
+                                    child: SvgPicture.asset(
+                                      "assets/images/-.svg",
+                                      height: 35,
+                                      width: 35,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                    ),
+                                    child: Text(
+                                      "$adultCount",
+                                      style: TextStyles.size32SofiaPro,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => setState(() => adultCount++),
+                                    child: SvgPicture.asset(
+                                      "assets/images/+.svg",
+                                      height: 35,
+                                      width: 35,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(width: 1, height: 105, color: Colors.black26),
+
+                        // Child Column
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "CHILD",
+                                style: TextStyles.size20SofiaPro,
+                              ),
+                              const Text(
+                                "(AGES 3 - 12)",
+                                style: TextStyles.size10SofiaProcrimsonRed,
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                "LKR 1,575.00",
+                                style: TextStyles.size14SofiaProdarkBlue,
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (childCount > 0) {
+                                        setState(() => childCount--);
+                                      }
+                                    },
+                                    child: SvgPicture.asset(
+                                      "assets/images/-.svg",
+                                      height: 35,
+                                      width: 35,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                    ),
+                                    child: Text(
+                                      "$childCount",
+                                      style: TextStyles.size32SofiaPro,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => setState(() => childCount++),
+                                    child: SvgPicture.asset(
+                                      "assets/images/+.svg",
+                                      height: 35,
+                                      width: 35,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+                    CustomButton(
+                      text: "PROCEED - LKR 5,325",
+                      onPressed: () {
+                        TermsConditionsPopup.show(context);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
   }
 }
 
-// SCREEN ARC PAINTER
+// SCREEN ARC
 class ScreenArcPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    // Gold line
     final goldPaint = Paint()
       ..color = AppColours.goldenYellow
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke;
 
-    // Blue line
     final bluePaint = Paint()
       ..color = AppColours.deepIndigo
       ..strokeWidth = 10
       ..style = PaintingStyle.stroke;
 
-    // Gold path
     final goldPath = Path();
     goldPath.moveTo(0, size.height);
     goldPath.quadraticBezierTo(
@@ -446,7 +648,6 @@ class ScreenArcPainter extends CustomPainter {
       size.height,
     );
 
-    // Blue path (slightly lower)
     final bluePath = Path();
     bluePath.moveTo(0, size.height + 4);
     bluePath.quadraticBezierTo(
@@ -456,9 +657,7 @@ class ScreenArcPainter extends CustomPainter {
       size.height + 4,
     );
 
-    // Draw blue first
     canvas.drawPath(bluePath, bluePaint);
-    // Then gold
     canvas.drawPath(goldPath, goldPaint);
   }
 
