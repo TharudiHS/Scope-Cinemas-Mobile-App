@@ -4,36 +4,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:scope_cinemas/components/app_bar.dart';
 import 'package:scope_cinemas/components/bottom_bar.dart';
 import 'package:scope_cinemas/components/button.dart';
+import 'package:scope_cinemas/data/models/showtimes_model.dart';
 import 'package:scope_cinemas/screens/movie_details_page.dart';
 import 'package:scope_cinemas/screens/select_seats.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
-
-/// Model class for date selector
-class ShowDate {
-  final String day;
-  final String date;
-  final String month;
-  final bool selected;
-
-  ShowDate(this.day, this.date, this.month, this.selected);
-}
-
-/// Model class for cinema format
-class CinemaFormat {
-  final String formatName;
-  final List<List<dynamic>> times;
-
-  CinemaFormat(this.formatName, this.times);
-}
-
-/// Model class for cinema
-class Cinema {
-  final String cinemaName;
-  final List<CinemaFormat> formats;
-
-  Cinema(this.cinemaName, this.formats);
-}
 
 class ShowtimesPage extends StatefulWidget {
   const ShowtimesPage({super.key});
