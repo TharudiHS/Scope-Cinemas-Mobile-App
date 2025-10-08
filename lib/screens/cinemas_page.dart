@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scope_cinemas/components/app_bar.dart';
 import 'package:scope_cinemas/components/bottom_bar.dart';
+import 'package:scope_cinemas/screens/cinema_details_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
 
@@ -52,16 +53,14 @@ class CinemasPage extends StatelessWidget {
           Container(height: 1, color: AppColours.royalIndigo.withOpacity(0.7)),
           const SizedBox(height: 25),
 
-          // List of Cinemas
-          ...cinemas.map((cinema) => buildCinemaCard(cinema)).toList(),
+          ...cinemas.map((cinema) => buildCinemaCard(context, cinema)).toList(),
         ],
       ),
-
       bottomNavigationBar: const BottomNavBar(selectedIndex: 2),
     );
   }
 
-  Widget buildCinemaCard(Map<String, dynamic> cinema) {
+  Widget buildCinemaCard(BuildContext context, Map<String, dynamic> cinema) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 28),
       child: Column(
@@ -80,7 +79,7 @@ class CinemasPage extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
 
-                // Gradient overlay for readability
+                // Gradient overlay
                 Container(
                   height: 250,
                   decoration: BoxDecoration(
@@ -159,7 +158,14 @@ class CinemasPage extends StatelessWidget {
                   vertical: 10,
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CinemaDetailsPage(),
+                  ),
+                );
+              },
               child: const Text(
                 "GET DIRECTIONS",
                 style: TextStyles.size16SofiaPro,
