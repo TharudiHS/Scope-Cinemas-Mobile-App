@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:scope_cinemas/components/app_bar.dart';
 import 'package:scope_cinemas/components/bottom_bar.dart';
 import 'package:scope_cinemas/components/button.dart';
+import 'package:scope_cinemas/screens/confirmation_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
 
@@ -324,7 +325,17 @@ class _PaymentPageState extends State<PaymentPage> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                CustomButton(text: "MAKE A PAYMENT", onPressed: () {}),
+                CustomButton(
+                  text: "MAKE A PAYMENT",
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ConfirmationPage(),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
