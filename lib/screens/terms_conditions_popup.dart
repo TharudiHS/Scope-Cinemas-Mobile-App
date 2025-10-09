@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scope_cinemas/screens/food_beverage_page.dart';
 import 'package:scope_cinemas/utils/app_colours.dart';
 import 'package:scope_cinemas/utils/text_styles.dart';
 
@@ -122,6 +123,14 @@ class TermsConditionsPopup {
                             child: ElevatedButton(
                               onPressed: () {
                                 setState(() => isAgreeActive = true);
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const FoodBeveragePage(),
+                                  ),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: isAgreeActive
