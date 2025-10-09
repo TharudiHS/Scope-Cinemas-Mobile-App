@@ -300,6 +300,13 @@ class TextStyles {
     color: AppColours.midnightBlue,
     letterSpacing: 0,
   );
+  static const TextStyle size17SofiaProdeepIndigo = TextStyle(
+    fontFamily: 'SofiaPro',
+    fontSize: 17,
+    fontWeight: FontWeight.w400,
+    color: AppColours.deepIndigo,
+    letterSpacing: 0,
+  );
   static const TextStyle size20SofiaPromidnightBlue = TextStyle(
     fontFamily: 'SofiaPro',
     fontSize: 20,
